@@ -18,6 +18,7 @@ SCAFFOLDS=$3
 CONTIG_FILE=$(basename $CONTIGS)
 SCAFFOLD_FILE=$(basename $SCAFFOLDS)
 
+JAVADIR=/fs/wrenhomes/sergek/Utils
 GENOMESIZE=`java -cp $JAVA_PATH SizeFasta $REF |awk '{SUM+=$NF; print SUM}'|tail -n 1`
 
 echo "Contig Stats"
