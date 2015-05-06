@@ -1,0 +1,73 @@
+<project name="gage" default="" basedir=".">
+    <description>
+        A build file for the GAGE code
+    </description>
+    <!-- Set global properties for this build -->
+    <property file="build.properties"/>
+    <property name="src.dir" location="./src"/>
+    <property name="java.dir" location="./src/main/java"/>
+    <property name="resources.dir" location="./src/main/resources"/>
+    <property name="build.dir" location="./build"/>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+        <!-- Create the build directory used by build, compile and test -->
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <target name="copy" depends="init">
+        <!-- Copy source into build directory -->
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}"/>
+        </copy>
+
+        <mkdir dir="${build.dir}/bin"/>
+    </target>
+
+    <target name="compile" depends="copy">
+        <javac srcdir="${build.dir}/main/java"
+               destdir="${build.dir}/bin"
+               debug="on"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <mkdir dir="${build.dir}/dist"/>
+        <jar destfile="${build.dir}/dist/gage.jar" basedir="${build.dir}/bin"/>
+    </target>
+
+    <target name="test" depends="jar">
+        <!-- Create test directory -->
+        <mkdir dir="${build.dir}/test"/>
+        <!-- Copy compiled java files into test directory -->
+        <copy todir="${build.dir}/test">
+            <fileset dir="${build.dir}/bin"/>
+        </copy>
+        <!-- Copy other files into test directory -->
+        <copy todir="${build.dir}/test">
+            <fileset dir="${build.dir}/main/resources"/>
+        </copy>
+
+        <!--
+        <property environment="env"/>
+        <exec dir="${build.dir}/test" executable="/bin/sh">
+            <env key="PATH" path="${env.PATH}:${basedir}/build/test"/>
+            <arg path="getCorrectnessStats.sh ../../test-data/aureus/genome.fasta ../../test-data/aureus/soapdenovo/genome.ctg.fasta ../../test-data/aureus/soapdenovo/genome.scf.fasta"/>
+        </exec>
+        -->
+    </target>
+
+
+    <target name="clean" description="clean up">
+        <!-- Delete build directory -->
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="purge" depends="clean"
+            description="Removes build directory and galaxy source code">
+        <delete dir="${build.dir}"/>
+        <delete dir="${galaxy.src}"/>
+    </target>
+
+
+</project>
